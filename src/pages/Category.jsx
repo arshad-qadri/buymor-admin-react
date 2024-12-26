@@ -5,20 +5,34 @@ import api from "../axios";
 import CreateCategory from "../components/modals/CreateCategory";
 import { RiDeleteBin4Fill } from "react-icons/ri";
 import { BiEdit } from "react-icons/bi";
+import Pagination from "../components/modals/Pagination";
 
 const CategoryPage = () => {
   const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
+  const limit = 10;
 
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    if (searchTerm) {
+      fetchCategories();
+    } else {
+      fetchCategories();
+    }
+  }, [currentPage, searchTerm]);
 
   const fetchCategories = async () => {
     try {
-      const response = await api.get(`${baseUrl}/category/all`);
+      const response = await api.get(
+        searchTerm
+          ? `/category/all?search=${searchTerm}&page=${currentPage}&${limit}`
+          : `/category/all?page=${currentPage}&${limit}`
+      );
       setCategories(response.data);
+      const totalPage = Math.ceil(response.data?.total / limit);
+      setTotalPage(totalPage);
     } catch (error) {
       toast.error("Failed to fetch categories.");
     }
@@ -40,8 +54,8 @@ const CategoryPage = () => {
   };
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Categories</h1>
+      <div className="flex justify-end items-center mb-6">
+        {/* <h1 className="text-2xl font-bold">Categories</h1> */}
         <button
           onClick={() => setIsModalOpen(true)}
           className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -59,52 +73,60 @@ const CategoryPage = () => {
           className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
-
-      <table className="w-full border-collapse border border-gray-300 shadow-sm rounded-md overflow-hidden">
-        <thead className="bg-gray-200">
-          <tr>
-            <th className="border border-gray-300 px-6 py-3 text-left font-medium text-gray-700">
-              #
-            </th>
-            <th className="border border-gray-300 px-6 py-3 text-left font-medium text-gray-700">
-              Name
-            </th>
-            <th className="border border-gray-300 px-6 py-3 text-left font-medium text-gray-700">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {categories &&
-            categories?.data?.length > 0 &&
-            categories?.data.map((category, index) => (
-              <tr
-                key={category._id}
-                className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
-              >
-                <td className="border border-gray-300 px-6 py-4 text-sm text-gray-700">
-                  {index + 1}
-                </td>
-                <td className="border border-gray-300 px-6 py-4 text-sm text-gray-700">
-                  {category.name}
-                </td>
-                <td className="border border-gray-300 px-6 py-4 text-sm text-gray-700">
-                  <div className="flex space-x-2">
-                    <button className="px-4 py-2 text-sm text-white bg-blue-600 rounded hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                      <BiEdit size={20}/>
-                    </button>
-                    <button
-                      onClick={() => handleDelete(category._id)}
-                      className="px-4 py-2 text-sm text-white bg-red-600 rounded hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400"
-                    >
-                      <RiDeleteBin4Fill size={20} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+      <div className="w-full overflow-x-auto">
+        <table className="w-full border-collapse border border-gray-300 shadow-sm rounded-md overflow-hidden">
+          <thead className="bg-gray-200">
+            <tr>
+              <th className="border border-gray-300 px-6 py-3 text-left font-medium text-gray-700">
+                #
+              </th>
+              <th className="border border-gray-300 px-6 py-3 text-left font-medium text-gray-700">
+                Name
+              </th>
+              <th className="border border-gray-300 px-6 py-3 text-left font-medium text-gray-700">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {categories &&
+              categories?.data?.length > 0 &&
+              categories?.data.map((category, index) => (
+                <tr
+                  key={category._id}
+                  className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
+                >
+                  <td className="border border-gray-300 px-6 py-4 text-sm text-gray-700">
+                    {index + 1}
+                  </td>
+                  <td className="border border-gray-300 px-6 py-4 text-sm text-gray-700">
+                    {category.name}
+                  </td>
+                  <td className="border border-gray-300 px-6 py-4 text-sm text-gray-700">
+                    <div className="flex space-x-2">
+                      <button className="px-4 py-2 text-sm text-white bg-blue-600 rounded hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        <BiEdit size={20} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(category._id)}
+                        className="px-4 py-2 text-sm text-white bg-red-600 rounded hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400"
+                      >
+                        <RiDeleteBin4Fill size={20} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+        {categories && categories?.data?.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPage}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
+        )}
+      </div>
 
       {isModalOpen && (
         <CreateCategory
