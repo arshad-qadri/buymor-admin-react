@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import { baseUrl } from "../variable";
 import api from "../axios";
@@ -6,6 +6,7 @@ import CreateCategory from "../components/modals/CreateCategory";
 import { RiDeleteBin4Fill } from "react-icons/ri";
 import { BiEdit } from "react-icons/bi";
 import Pagination from "../components/modals/Pagination";
+import Loader from "../components/Loader";
 
 const CategoryPage = () => {
   const [categories, setCategories] = useState([]);
@@ -13,28 +14,45 @@ const CategoryPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
+  const [loading, setLoading] = useState(false);
   const limit = 10;
+  const timeId = useRef(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     if (searchTerm) {
-      fetchCategories();
+      if (timeId.current) {
+        clearTimeout(timeId.current);
+      }
+      timeId.current = setTimeout(() => {
+        fetchCategories();
+      }, 300);
+      if(inputRef.current)
+        inputRef.current.focus();
     } else {
       fetchCategories();
     }
+    return () => {
+      clearTimeout(timeId.current);
+    }
+    
   }, [currentPage, searchTerm]);
 
   const fetchCategories = async () => {
+    setLoading(true);
     try {
       const response = await api.get(
         searchTerm
-          ? `/category/all?search=${searchTerm}&page=${currentPage}&mimit=${limit}`
+          ? `/category/all?search=${searchTerm}&page=${currentPage}&limit=${limit}`
           : `/category/all?page=${currentPage}&limit=${limit}`
       );
       setCategories(response.data);
       const totalPage = Math.ceil(response.data?.total / limit);
       setTotalPage(totalPage);
+      setLoading(false);
     } catch (error) {
       toast.error("Failed to fetch categories.");
+      setLoading(false);
     }
   };
 
@@ -52,6 +70,12 @@ const CategoryPage = () => {
       }
     }
   };
+  if (loading)
+    return (
+      <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
+        <Loader />
+      </div>
+    );
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
       <div className="flex justify-end items-center mb-6">
@@ -66,6 +90,7 @@ const CategoryPage = () => {
 
       <div className="mb-4">
         <input
+        ref={inputRef}
           type="text"
           placeholder="Search categories"
           value={searchTerm}
