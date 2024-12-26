@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css"; // Toastify CSS
 import AuthLayout from "./layouts/AuthLayout";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
+import CategoryPage from "./pages/Category";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -27,6 +28,14 @@ function App() {
               element={
                 <AuthLayout>
                   <Dashboard />
+                </AuthLayout>
+              }
+            />
+            <Route
+              path="/category"
+              element={
+                <AuthLayout>
+                  <CategoryPage />
                 </AuthLayout>
               }
             />
