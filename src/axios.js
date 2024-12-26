@@ -1,7 +1,8 @@
 import axios from "axios";
+import { baseUrl } from "./variable";
 
 const api = axios.create({
-    baseURL: "http://localhost:5000/api", // Replace with your API base URL
+    baseURL: baseUrl, // Replace with your API base URL
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("token")}`,

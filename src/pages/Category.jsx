@@ -27,8 +27,8 @@ const CategoryPage = () => {
     try {
       const response = await api.get(
         searchTerm
-          ? `/category/all?search=${searchTerm}&page=${currentPage}&${limit}`
-          : `/category/all?page=${currentPage}&${limit}`
+          ? `/category/all?search=${searchTerm}&page=${currentPage}&mimit=${limit}`
+          : `/category/all?page=${currentPage}&limit=${limit}`
       );
       setCategories(response.data);
       const totalPage = Math.ceil(response.data?.total / limit);

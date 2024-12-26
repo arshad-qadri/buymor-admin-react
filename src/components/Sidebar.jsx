@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   return (
@@ -19,9 +20,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       <h2 className="hidden lg:block text-xl font-bold p-5">Buymor</h2>
       <ul className="space-y-4 p-5">
         <li>
-          <a href="/category" className="hover:text-gray-300">
+          <Link to="/category" className="hover:text-gray-300">
             Category
-          </a>
+          </Link>
         </li>
         <li>
           <a href="#" className="hover:text-gray-300">
