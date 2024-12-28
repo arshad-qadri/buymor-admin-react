@@ -1,11 +1,18 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Toastify CSS
 import AuthLayout from "./layouts/AuthLayout";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import CategoryPage from "./pages/Category";
+import Product from "./pages/Product";
+import ProductInformation from "./pages/ProductInformation";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -13,8 +20,12 @@ function App() {
   return (
     <>
       {/* Toast Container for Notifications */}
-      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
-      
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+      />
+
       <Routes>
         {!token ? (
           <>
@@ -36,6 +47,22 @@ function App() {
               element={
                 <AuthLayout>
                   <CategoryPage />
+                </AuthLayout>
+              }
+            />
+            <Route
+              path="/products"
+              element={
+                <AuthLayout>
+                  <Product />
+                </AuthLayout>
+              }
+            />
+            <Route
+              path="/products/:slug"
+              element={
+                <AuthLayout>
+                  <ProductInformation />
                 </AuthLayout>
               }
             />

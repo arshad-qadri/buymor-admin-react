@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { baseUrl } from "../variable";
+import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai"; // Import icons from react-icons
 
 export default function Login() {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function Login() {
     emailOrMobile: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
   const handleChange = (e) => {
     setFormData({
@@ -37,7 +39,6 @@ export default function Login() {
       const { token } = response.data;
       localStorage.setItem("token", token);
       toast.success("Login successful!");
-      //   navigate("/");
       setTimeout(() => {
         location.href = "/";
       }, 1000);
@@ -86,17 +87,27 @@ export default function Login() {
             >
               Password
             </label>
-            <div className="mt-2">
+            <div className="mt-2 relative">
               <input
                 placeholder="Password"
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"} // Toggle password visibility
                 required
                 value={formData.password}
                 onChange={handleChange}
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
               />
+              <span
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)} // Toggle showPassword state
+              >
+                {showPassword ? (
+                  <AiOutlineEye size={20} />
+                ) : (
+                  <AiOutlineEyeInvisible size={20} />
+                )}
+              </span>
             </div>
           </div>
 
