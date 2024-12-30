@@ -4,6 +4,7 @@ import Select from "react-select";
 import { baseUrl } from "../../variable";
 import api from "../../axios";
 import { CgClose } from "react-icons/cg";
+import { useNavigate } from "react-router-dom";
 
 const CreateProduct = ({ setView }) => {
   const [name, setName] = useState("");
@@ -14,6 +15,7 @@ const CreateProduct = ({ setView }) => {
   const [category, setCategory] = useState(null);
   const [categories, setCategories] = useState([]);
   const [images, setImages] = useState([]);
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchCategories();
@@ -95,7 +97,7 @@ const CreateProduct = ({ setView }) => {
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold mb-6">Create Product</h1>
-        <button onClick={() => setView("table")} className="cursor-pointer">
+        <button onClick={() => {setView("table"); navigate("/products")}} className="cursor-pointer">
           <CgClose size={20} />
         </button>
       </div>

@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
-import { baseUrl } from "../variable";
 import api from "../axios";
 import CreateCategory from "../components/modals/CreateCategory";
 import { RiDeleteBin4Fill } from "react-icons/ri";
 import { BiEdit } from "react-icons/bi";
-import Pagination from "../components/modals/Pagination";
 import Loader from "../components/Loader";
+import Pagination from "../components/Pagination";
 
 const CategoryPage = () => {
   const [categories, setCategories] = useState([]);

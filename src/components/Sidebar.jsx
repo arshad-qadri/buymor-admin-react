@@ -1,7 +1,19 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
+  const location = useLocation(); // Get current location
+
+  // Define the sidebar menu items in an array
+  const menuItems = [
+    { name: "Dashboard", to: "/" },
+    { name: "Category", to: "/category" },
+    { name: "Products", to: "/products" },
+    { name: "Orders", to: "#" },
+    { name: "Customers", to: "#" },
+    { name: "Settings", to: "#" },
+  ];
+
   return (
     <div
       className={`fixed lg:relative top-0 left-0 min-h-screen w-52 bg-gray-800 text-white z-50 transform ${
@@ -17,33 +29,24 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           ✕
         </button>
       </div>
-      <h2 className="hidden lg:block text-xl font-bold p-5 border-b border-gray-700">Buymor</h2>
+      <h2 className="hidden lg:block text-xl font-bold p-5 border-b border-gray-700">
+        Buymor
+      </h2>
       <ul className="space-y-4 p-5">
-        <li>
-          <Link to="/category" className="hover:text-gray-300">
-            Category
-          </Link>
-        </li>
-        <li>
-          <Link to={"/products"} className="hover:text-gray-300">
-            Products
-          </Link>
-        </li>
-        <li>
-          <a href="#" className="hover:text-gray-300">
-            Orders
-          </a>
-        </li>
-        <li>
-          <a href="#" className="hover:text-gray-300">
-            Customers
-          </a>
-        </li>
-        <li>
-          <a href="#" className="hover:text-gray-300">
-            Settings
-          </a>
-        </li>
+        {menuItems.map((item, index) => (
+          <li key={index}>
+            <Link
+              to={item.to}
+              className={`hover:text-gray-300 ${
+                location.pathname === item.to
+                  ? "text-indigo-500 font-bold" // Active state
+                  : ""
+              }`}
+            >
+              {item.name}
+            </Link>
+          </li>
+        ))}
       </ul>
     </div>
   );

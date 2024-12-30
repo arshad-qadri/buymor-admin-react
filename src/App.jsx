@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import CategoryPage from "./pages/Category";
 import Product from "./pages/Product";
 import ProductInformation from "./pages/ProductInformation";
+import AdminProfile from "./pages/Profile";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -63,6 +64,14 @@ function App() {
               element={
                 <AuthLayout>
                   <ProductInformation />
+                </AuthLayout>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <AuthLayout>
+                  <AdminProfile />
                 </AuthLayout>
               }
             />
